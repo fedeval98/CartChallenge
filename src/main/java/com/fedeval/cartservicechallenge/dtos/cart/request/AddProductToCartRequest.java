@@ -1,4 +1,4 @@
-package com.fedeval.cartservicechallenge.dtos.product.request;
+package com.fedeval.cartservicechallenge.dtos.cart.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

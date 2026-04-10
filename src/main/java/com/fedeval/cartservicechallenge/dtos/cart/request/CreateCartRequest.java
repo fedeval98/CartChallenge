@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class CreateCartRequest {
-    @NotNull (message = "Cliend ID is required")
+    @NotNull (message = "Client ID is required")
     private Long clientId;
 }

@@ -3,6 +3,7 @@ package com.fedeval.cartservicechallenge.dtos.product.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -21,6 +22,6 @@ public class CreateProductRequest {
     private Long categoryId;
 
     @NotNull(message = "Stock is required")
-    @Positive(message = "Stock must be greater than 0")
+    @PositiveOrZero(message = "Stock must be greater than 0")
     private Integer stock;
 }
