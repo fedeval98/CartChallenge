@@ -29,4 +29,7 @@ public class Cart {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private CartStatus status;
+
+    @Column(nullable = false, unique = true)
+    private String code;
 }

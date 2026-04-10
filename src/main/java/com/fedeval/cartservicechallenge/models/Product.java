@@ -30,4 +30,7 @@ public class Product {
 
     @Column(nullable = false)
     private BigDecimal price;
+
+    @Column(nullable = false, unique = true)
+    private String code;
 }
