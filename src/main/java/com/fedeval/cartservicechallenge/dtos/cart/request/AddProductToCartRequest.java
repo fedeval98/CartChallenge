@@ -13,4 +13,7 @@ public class AddProductToCartRequest {
     @NotNull(message = "Quantity is required")
     @Positive(message = "Quantity must be greater than 0")
     private Integer quantity;
+
+    @NotBlank(message = "Cart code is required")
+    private String cartCode;
 }

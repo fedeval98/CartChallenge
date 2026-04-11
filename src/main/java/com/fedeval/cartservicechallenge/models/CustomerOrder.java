@@ -31,7 +31,7 @@ public class CustomerOrder {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<CustomerOrderItem> items = new ArrayList<>();
 

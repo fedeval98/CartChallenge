@@ -1,6 +1,8 @@
 package com.fedeval.cartservicechallenge.controllers;
 
+import com.fedeval.cartservicechallenge.dtos.cart.request.AddProductToCartRequest;
 import com.fedeval.cartservicechallenge.dtos.cart.request.CreateCartRequest;
+import com.fedeval.cartservicechallenge.dtos.cart.response.CartResponse;
 import com.fedeval.cartservicechallenge.mappers.CartMapper;
 import com.fedeval.cartservicechallenge.models.Cart;
 import com.fedeval.cartservicechallenge.services.CartService;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/createCart")
+@RequestMapping("/api")
 public class CartController {
 
     private final CartService cartService;
@@ -21,14 +23,25 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping
+    @PostMapping ("/createCart")
     public ResponseEntity<?> createCart(@RequestBody CreateCartRequest request){
-        try {
             Cart cart = cartService.createCart(request.getClientId());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(CartMapper.toResponse(cart));
-        }catch (IllegalStateException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body (e.getMessage());
+            CartResponse response = CartMapper.toResponse(cart);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }
+
+    @PostMapping("/addProduct")
+    public ResponseEntity<?> addProductToCart(@RequestBody AddProductToCartRequest request) {
+            Cart cart = cartService.addProductToCart(
+                    request.getCartCode(),
+                    request.getProductCode(),
+                    request.getQuantity()
+            );
+
+            CartResponse response = CartMapper.toResponse(cart);
+
+            return ResponseEntity.ok(response);
     }
 }
