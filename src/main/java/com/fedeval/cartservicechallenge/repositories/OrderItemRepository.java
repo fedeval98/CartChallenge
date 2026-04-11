@@ -1,10 +1,10 @@
 package com.fedeval.cartservicechallenge.repositories;
 
-import com.fedeval.cartservicechallenge.models.OrderItem;
+import com.fedeval.cartservicechallenge.models.CustomerOrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
-    List<OrderItem> findByOrderId(Long orderId);
+public interface OrderItemRepository extends JpaRepository<CustomerOrderItem, Long> {
+    List<CustomerOrderItem> findByOrderId(Long orderId);
 }

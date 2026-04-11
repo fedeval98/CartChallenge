@@ -38,6 +38,6 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     @Builder.Default
-    private List<Order> orders = new ArrayList<>();
+    private List<CustomerOrder> customerOrders = new ArrayList<>();
 
 }
