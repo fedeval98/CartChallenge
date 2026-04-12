@@ -1,14 +1,14 @@
 package com.fedeval.cartservicechallenge.services.impl;
 
+import com.fedeval.cartservicechallenge.controllers.CartController;
+import com.fedeval.cartservicechallenge.dtos.cart.response.CartDetailResponse;
+import com.fedeval.cartservicechallenge.dtos.cart.response.CartProductResponse;
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartResponse;
 import com.fedeval.cartservicechallenge.exceptions.BadRequestException;
 import com.fedeval.cartservicechallenge.exceptions.ConflictException;
 import com.fedeval.cartservicechallenge.exceptions.ForbiddenException;
 import com.fedeval.cartservicechallenge.exceptions.ResourceNotFoundException;
-import com.fedeval.cartservicechallenge.models.Cart;
-import com.fedeval.cartservicechallenge.models.CartItem;
-import com.fedeval.cartservicechallenge.models.Client;
-import com.fedeval.cartservicechallenge.models.Product;
+import com.fedeval.cartservicechallenge.models.*;
 import com.fedeval.cartservicechallenge.models.enums.CartStatus;
 import com.fedeval.cartservicechallenge.repositories.CartItemRepository;
 import com.fedeval.cartservicechallenge.repositories.CartRepository;
@@ -19,8 +19,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,6 +49,10 @@ class CartServiceImplTest {
 
     @InjectMocks
     private CartServiceImpl cartService;
+
+    @Mock
+    private OrderAsyncService orderAsyncService;
+
 
     private static final String EMAIL = "test@mail.com";
     private static final String OTHER_EMAIL = "other@mail.com";
@@ -378,4 +387,136 @@ class CartServiceImplTest {
 
         assertEquals("Product is not in cart", ex.getMessage());
     }
+
+    @Test
+    void shouldReturnCartProductsSuccessfully() {
+        Cart cart = buildCart();
+
+        Category category = new Category();
+        category.setName("Laptops");
+        category.setDiscountRate(new BigDecimal("10.00"));
+
+        Product product = new Product();
+        product.setId(1L);
+        product.setCode("TECH-001");
+        product.setName("Notebook Gamer");
+        product.setPrice(new BigDecimal("1000.00"));
+        product.setStock(5);
+        product.setCategory(category);
+
+        CartItem cartItem = new CartItem();
+        cartItem.setCart(cart);
+        cartItem.setProduct(product);
+        cartItem.setQuantity(2);
+
+        cart.setItems(new ArrayList<>());
+        cart.getItems().add(cartItem);
+
+        when(cartRepository.findByCode("CART-123")).thenReturn(Optional.of(cart));
+
+        CartDetailResponse result = cartService.getCartProducts("CART-123", EMAIL);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getClientId());
+        assertEquals("CART-123", result.getCartCode());
+        assertEquals("ACTIVE", result.getStatus());
+
+        assertNotNull(result.getProducts());
+        assertEquals(1, result.getProducts().size());
+
+        CartProductResponse response = result.getProducts().get(0);
+        assertEquals(1L, response.getProductId());
+        assertEquals("TECH-001", response.getProductCode());
+        assertEquals("Notebook Gamer", response.getProductName());
+        assertEquals(new BigDecimal("1000.00"), response.getPrice());
+        assertEquals(5, response.getStock());
+        assertEquals(2, response.getQuantity());
+        assertEquals("Laptops", response.getCategoryName());
+        assertEquals(new BigDecimal("10.00"), response.getDiscountRate());
+        assertEquals(new BigDecimal("900.0000"), response.getFinalPrice());
+
+        verify(cartRepository).findByCode("CART-123");
+    }
+
+    @Test
+    void shouldThrowResourceNotFoundWhenCartDoesNotExistForGetCartProducts() {
+        when(cartRepository.findByCode("INVALID-CART")).thenReturn(Optional.empty());
+
+        ResourceNotFoundException exception = assertThrows(
+                ResourceNotFoundException.class,
+                () -> cartService.getCartProducts("INVALID-CART", EMAIL)
+        );
+
+        assertEquals("Cart not found", exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowForbiddenWhenGettingProductsFromAnotherUsersCart() {
+        Cart cart = buildCart();
+
+        when(cartRepository.findByCode("CART-123")).thenReturn(Optional.of(cart));
+
+        ForbiddenException exception = assertThrows(
+                ForbiddenException.class,
+                () -> cartService.getCartProducts("CART-123", OTHER_EMAIL)
+        );
+
+        assertEquals("You cannot access this cart", exception.getMessage());
+    }
+
+    @Test
+    void shouldReturnEmptyProductListWhenCartHasNoProducts() {
+        Cart cart = buildCart();
+        cart.setItems(new ArrayList<>());
+
+        when(cartRepository.findByCode("CART-123")).thenReturn(Optional.of(cart));
+
+        CartDetailResponse result = cartService.getCartProducts("CART-123", EMAIL);
+
+        assertNotNull(result);
+        assertEquals(1L, result.getClientId());
+        assertEquals("CART-123", result.getCartCode());
+        assertEquals("ACTIVE", result.getStatus());
+        assertNotNull(result.getProducts());
+        assertTrue(result.getProducts().isEmpty());
+    }
+
+    @Test
+    void shouldTriggerAsyncOrderProcessing() {
+        cartService.processCartOrder("CART-123", EMAIL);
+
+        verify(orderAsyncService).processOrderAsync("CART-123", EMAIL);
+    }
+
+    @Test
+    void shouldReturnAllCartsForAuthenticatedClient() {
+        Client client = new Client();
+        client.setId(1L);
+        client.setEmail(EMAIL);
+
+        Cart cart1 = new Cart();
+        cart1.setCode("CART-123");
+        cart1.setStatus(CartStatus.ACTIVE);
+        cart1.setClient(client);
+        cart1.setItems(new ArrayList<>());
+
+        Cart cart2 = new Cart();
+        cart2.setCode("CART-456");
+        cart2.setStatus(CartStatus.COMPLETED);
+        cart2.setClient(client);
+        cart2.setItems(new ArrayList<>());
+
+        when(clientRepository.findByEmail(EMAIL)).thenReturn(Optional.of(client));
+        when(cartRepository.findAllByClientId(1L)).thenReturn(List.of(cart1, cart2));
+
+        List<CartResponse> result = cartService.getCartsByClient(EMAIL);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("CART-123", result.get(0).getCode());
+        assertEquals("ACTIVE", result.get(0).getStatus());
+        assertEquals("CART-456", result.get(1).getCode());
+        assertEquals("COMPLETED", result.get(1).getStatus());
+    }
+
 }

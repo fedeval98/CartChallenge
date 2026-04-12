@@ -1,5 +1,7 @@
 package com.fedeval.cartservicechallenge.services.impl;
 
+import com.fedeval.cartservicechallenge.dtos.cart.response.CartDetailResponse;
+import com.fedeval.cartservicechallenge.dtos.cart.response.CartProductResponse;
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartResponse;
 import com.fedeval.cartservicechallenge.exceptions.BadRequestException;
 import com.fedeval.cartservicechallenge.exceptions.ConflictException;
@@ -20,6 +22,8 @@ import com.fedeval.cartservicechallenge.utils.CodeGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @Transactional
@@ -29,17 +33,20 @@ public class CartServiceImpl implements CartService {
     private final ClientRepository clientRepository;
     private final ProductRepository productRepository;
     private final CartItemRepository cartItemRepository;
+    private final OrderAsyncService orderAsyncService;
 
     public CartServiceImpl(
             CartRepository cartRepository,
             ClientRepository clientRepository,
             ProductRepository productRepository,
-            CartItemRepository cartItemRepository
+            CartItemRepository cartItemRepository,
+            OrderAsyncService orderAsyncService
     ) {
         this.cartRepository = cartRepository;
         this.clientRepository = clientRepository;
         this.productRepository = productRepository;
         this.cartItemRepository = cartItemRepository;
+        this.orderAsyncService = orderAsyncService;
     }
 
     @Override
@@ -136,5 +143,43 @@ public class CartServiceImpl implements CartService {
         cartItemRepository.delete(cartItem);
 
         return CartMapper.toResponse(cart);
+    }
+
+    @Override
+    public CartDetailResponse getCartProducts(String cartCode, String email) {
+
+        Cart cart = cartRepository.findByCode(cartCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+
+        if (!cart.getClient().getEmail().equals(email)) {
+            throw new ForbiddenException("You cannot access this cart");
+        }
+
+        List<CartProductResponse> products = cart.getItems().stream()
+                .map(CartMapper::toCartProductResponse)
+                .toList();
+
+        CartDetailResponse response = new CartDetailResponse();
+        response.setClientId(cart.getClient().getId());
+        response.setCartCode(cart.getCode());
+        response.setStatus(cart.getStatus().name());
+        response.setProducts(products);
+
+        return response;
+    }
+
+    @Override
+    public void processCartOrder(String cartCode, String email) {
+        orderAsyncService.processOrderAsync(cartCode, email);
+    }
+
+    @Override
+    public List<CartResponse> getCartsByClient(String email) {
+        Client client = clientRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
+
+        return cartRepository.findAllByClientId(client.getId()).stream()
+                .map(CartMapper::toResponse)
+                .toList();
     }
 }

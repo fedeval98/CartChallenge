@@ -7,8 +7,8 @@ import java.util.List;
 @Data
 public class CartDetailResponse {
 
-    private String code;
     private Long clientId;
+    private String cartCode;
     private String status;
-    private List<CartItemResponse> items;
+    private List<CartProductResponse> products;
 }

@@ -2,6 +2,8 @@ package com.fedeval.cartservicechallenge.controllers;
 
 import com.fedeval.cartservicechallenge.dtos.cart.request.AddProductToCartRequest;
 import com.fedeval.cartservicechallenge.dtos.cart.request.CreateCartRequest;
+import com.fedeval.cartservicechallenge.dtos.cart.response.CartDetailResponse;
+import com.fedeval.cartservicechallenge.dtos.cart.response.CartProductResponse;
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartResponse;
 import com.fedeval.cartservicechallenge.mappers.CartMapper;
 import com.fedeval.cartservicechallenge.models.Cart;
@@ -10,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -64,6 +68,33 @@ public class CartController {
                 email
         );
 
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/cart/{cartCode}/products")
+    public ResponseEntity<CartDetailResponse> getCartProducts(
+            @PathVariable String cartCode,
+            Authentication authentication
+    ) {
+        String email = authentication.getName();
+        CartDetailResponse response = cartService.getCartProducts(cartCode, email);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/cart/processOrder/{cartCode}")
+    public ResponseEntity<String> processOrder(
+            @PathVariable String cartCode,
+            Authentication authentication
+    ) {
+        String email = authentication.getName();
+        cartService.processCartOrder(cartCode, email);
+        return ResponseEntity.accepted().body("Estamos procesando su orden");
+    }
+
+    @GetMapping("/cart/myCarts")
+    public ResponseEntity<List<CartResponse>> getMyCarts(Authentication authentication) {
+        String email = authentication.getName();
+        List<CartResponse> response = cartService.getCartsByClient(email);
         return ResponseEntity.ok(response);
     }
 }
