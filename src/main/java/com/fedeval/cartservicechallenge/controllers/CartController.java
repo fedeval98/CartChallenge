@@ -2,16 +2,18 @@ package com.fedeval.cartservicechallenge.controllers;
 
 import com.fedeval.cartservicechallenge.dtos.cart.request.AddProductToCartRequest;
 import com.fedeval.cartservicechallenge.dtos.cart.request.CreateCartRequest;
+import com.fedeval.cartservicechallenge.dtos.cart.response.CartDetailResponse;
+import com.fedeval.cartservicechallenge.dtos.cart.response.CartProductResponse;
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartResponse;
 import com.fedeval.cartservicechallenge.mappers.CartMapper;
 import com.fedeval.cartservicechallenge.models.Cart;
 import com.fedeval.cartservicechallenge.services.CartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -19,29 +21,80 @@ public class CartController {
 
     private final CartService cartService;
 
-    public CartController (CartService cartService){
+    public CartController(CartService cartService){
         this.cartService = cartService;
     }
 
-    @PostMapping ("/createCart")
-    public ResponseEntity<?> createCart(@RequestBody CreateCartRequest request){
-            Cart cart = cartService.createCart(request.getClientId());
+    @PostMapping("/cart/createCart")
+    public ResponseEntity<?> createCart(
+            @RequestBody CreateCartRequest request,
+            Authentication authentication
+    ) {
+        String email = authentication.getName();
 
-            CartResponse response = CartMapper.toResponse(cart);
+        CartResponse response = cartService.createCart(request.getClientId(), email);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 
-    @PostMapping("/addProduct")
-    public ResponseEntity<?> addProductToCart(@RequestBody AddProductToCartRequest request) {
-            Cart cart = cartService.addProductToCart(
-                    request.getCartCode(),
-                    request.getProductCode(),
-                    request.getQuantity()
-            );
+    @PostMapping("/cart/addProduct")
+    public ResponseEntity<?> addProductToCart(
+            @RequestBody AddProductToCartRequest request,
+            Authentication authentication
+    ) {
+        String email = authentication.getName();
 
-            CartResponse response = CartMapper.toResponse(cart);
+        CartResponse response = cartService.addProductToCart(
+                request.getCartCode(),
+                request.getProductCode(),
+                request.getQuantity(),
+                email
+        );
 
-            return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/cart/deleteProductFrom/{cartCode}/products/{productCode}")
+    public ResponseEntity<?> removeProductFromCart(
+            @PathVariable String cartCode,
+            @PathVariable String productCode,
+            Authentication authentication
+    ) {
+        String email = authentication.getName();
+
+        CartResponse response = cartService.removeProductFromCart(
+                cartCode,
+                productCode,
+                email
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/cart/{cartCode}/products")
+    public ResponseEntity<CartDetailResponse> getCartProducts(
+            @PathVariable String cartCode,
+            Authentication authentication
+    ) {
+        String email = authentication.getName();
+        CartDetailResponse response = cartService.getCartProducts(cartCode, email);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/cart/processOrder/{cartCode}")
+    public ResponseEntity<String> processOrder(
+            @PathVariable String cartCode,
+            Authentication authentication
+    ) {
+        String email = authentication.getName();
+        cartService.processCartOrder(cartCode, email);
+        return ResponseEntity.accepted().body("Estamos procesando su orden");
+    }
+
+    @GetMapping("/cart/myCarts")
+    public ResponseEntity<List<CartResponse>> getMyCarts(Authentication authentication) {
+        String email = authentication.getName();
+        List<CartResponse> response = cartService.getCartsByClient(email);
+        return ResponseEntity.ok(response);
     }
 }
