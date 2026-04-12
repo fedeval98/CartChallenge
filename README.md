@@ -3,16 +3,20 @@
 API REST desarrollada con Spring Boot para simular un sistema de procesamiento de pedidos con autenticación básica, persistencia en H2 y procesamiento asíncrono de órdenes.
 
 ## Tecnologías usadas
+### 🧠 Core
+![Static Badge](https://img.shields.io/badge/Java-21%2B-blue) ![Static Badge](https://img.shields.io/badge/Spring_Boot-4.0.5-green)
 
-- Java 21 o superior
-- Spring Boot
-- Spring Web
-- Spring Security
-- Spring Data JPA
-- H2 Database
-- Lombok
-- JUnit 5
-- Mockito
+### 🌐 API y Seguridad
+![Static Badge](https://img.shields.io/badge/Spring_Web-REST-green) ![Static Badge](https://img.shields.io/badge/Spring_Security-Basic_Auth-red)
+
+### 🗄️ Manejo de datos
+![Static Badge](https://img.shields.io/badge/Spring_Data_JPA-Hibernate-orange) ![Static Badge](https://img.shields.io/badge/H2-InMemory_DB-lightgrey)
+
+### 🛠️ Herramientas
+![Static Badge](https://img.shields.io/badge/Lombok-Annotations-pink)
+
+### 🧪 Testing
+![Static Badge](https://img.shields.io/badge/JUnit-5-red) ![Static Badge](https://img.shields.io/badge/Mockito-Mocking-blueviolet)
 
 ## Requisitos previos
 
@@ -68,7 +72,7 @@ Configuración típica:
 
 ---
 
-## Endpoints principales - [ver endpoints](https://github.com/fedeval98/CartChallenge/wiki/Endpoints)
+## Endpoints principales - [consultar wiki](https://github.com/fedeval98/CartChallenge/wiki/Endpoints)
 
 ---
 ## Tests
