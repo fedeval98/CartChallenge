@@ -9,14 +9,17 @@ import com.fedeval.cartservicechallenge.mappers.CartMapper;
 import com.fedeval.cartservicechallenge.models.Cart;
 import com.fedeval.cartservicechallenge.services.CartService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@Validated
 @RequestMapping("/api")
 public class CartController {
 
@@ -57,8 +60,8 @@ public class CartController {
 
     @DeleteMapping("/cart/deleteProductFrom/{cartCode}/products/{productCode}")
     public ResponseEntity<CartResponse> removeProductFromCart(
-            @PathVariable String cartCode,
-            @PathVariable String productCode,
+            @PathVariable @NotBlank String cartCode,
+            @PathVariable @NotBlank String productCode,
             Authentication authentication
     ) {
         String email = authentication.getName();
@@ -74,7 +77,7 @@ public class CartController {
 
     @GetMapping("/cart/{cartCode}/products")
     public ResponseEntity<CartDetailResponse> getCartProducts(
-            @PathVariable String cartCode,
+            @PathVariable @NotBlank String cartCode,
             Authentication authentication
     ) {
         String email = authentication.getName();
@@ -84,7 +87,7 @@ public class CartController {
 
     @PostMapping("/cart/processOrder/{cartCode}")
     public ResponseEntity<String> processOrder(
-            @PathVariable String cartCode,
+            @PathVariable @NotBlank String cartCode,
             Authentication authentication
     ) {
         String email = authentication.getName();

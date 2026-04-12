@@ -518,5 +518,4 @@ class CartServiceImplTest {
         assertEquals("CART-456", result.get(1).getCode());
         assertEquals("COMPLETED", result.get(1).getStatus());
     }
-
 }
