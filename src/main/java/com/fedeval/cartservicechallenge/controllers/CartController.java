@@ -8,6 +8,7 @@ import com.fedeval.cartservicechallenge.dtos.cart.response.CartResponse;
 import com.fedeval.cartservicechallenge.mappers.CartMapper;
 import com.fedeval.cartservicechallenge.models.Cart;
 import com.fedeval.cartservicechallenge.services.CartService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -26,8 +27,8 @@ public class CartController {
     }
 
     @PostMapping("/cart/createCart")
-    public ResponseEntity<?> createCart(
-            @RequestBody CreateCartRequest request,
+    public ResponseEntity<CartResponse> createCart(
+            @RequestBody @Valid CreateCartRequest request,
             Authentication authentication
     ) {
         String email = authentication.getName();
@@ -38,8 +39,8 @@ public class CartController {
     }
 
     @PostMapping("/cart/addProduct")
-    public ResponseEntity<?> addProductToCart(
-            @RequestBody AddProductToCartRequest request,
+    public ResponseEntity<CartResponse> addProductToCart(
+            @RequestBody @Valid AddProductToCartRequest request,
             Authentication authentication
     ) {
         String email = authentication.getName();
@@ -55,7 +56,7 @@ public class CartController {
     }
 
     @DeleteMapping("/cart/deleteProductFrom/{cartCode}/products/{productCode}")
-    public ResponseEntity<?> removeProductFromCart(
+    public ResponseEntity<CartResponse> removeProductFromCart(
             @PathVariable String cartCode,
             @PathVariable String productCode,
             Authentication authentication
