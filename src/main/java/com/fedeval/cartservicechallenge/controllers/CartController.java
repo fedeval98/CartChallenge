@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @Validated
-@RequestMapping("/api")
+@RequestMapping("/api/cart")
 public class CartController {
 
     private final CartService cartService;
@@ -29,7 +29,7 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/cart/createCart")
+    @PostMapping("/createcart")
     public ResponseEntity<CartResponse> createCart(
             @RequestBody @Valid CreateCartRequest request,
             Authentication authentication
@@ -41,7 +41,7 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PostMapping("/cart/addProduct")
+    @PostMapping("/addproduct")
     public ResponseEntity<CartResponse> addProductToCart(
             @RequestBody @Valid AddProductToCartRequest request,
             Authentication authentication
@@ -58,7 +58,7 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/cart/deleteProductFrom/{cartCode}/products/{productCode}")
+    @DeleteMapping("/deleteproductfrom/{cartCode}/products/{productCode}")
     public ResponseEntity<CartResponse> removeProductFromCart(
             @PathVariable @NotBlank String cartCode,
             @PathVariable @NotBlank String productCode,
@@ -75,7 +75,7 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/cart/{cartCode}/products")
+    @GetMapping("/{cartCode}/products")
     public ResponseEntity<CartDetailResponse> getCartProducts(
             @PathVariable @NotBlank String cartCode,
             Authentication authentication
@@ -85,7 +85,7 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/cart/processOrder/{cartCode}")
+    @PostMapping("/processOrder/{cartCode}")
     public ResponseEntity<String> processOrder(
             @PathVariable @NotBlank String cartCode,
             Authentication authentication
@@ -95,7 +95,7 @@ public class CartController {
         return ResponseEntity.accepted().body("Estamos procesando su orden");
     }
 
-    @GetMapping("/cart/myCarts")
+    @GetMapping("/mycarts")
     public ResponseEntity<List<CartResponse>> getMyCarts(Authentication authentication) {
         String email = authentication.getName();
         List<CartResponse> response = cartService.getCartsByClient(email);

@@ -55,10 +55,15 @@ class CustomExceptionHandlerTest {
     void should_handle_forbidden() {
         ForbiddenException ex = new ForbiddenException("You cannot access this cart");
 
-        ResponseEntity<String> response = handler.handleForbidden(ex);
+        ResponseEntity<ErrorResponse> response = handler.handleForbidden(ex);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-        assertEquals("You cannot access this cart", response.getBody());
+        assertNotNull(response.getBody());
+
+        assertEquals(403, response.getBody().getStatus());
+        assertEquals("Forbidden", response.getBody().getError());
+        assertEquals("You cannot access this cart", response.getBody().getMessage());
+        assertNotNull(response.getBody().getTimestamp());
     }
 
     @Test

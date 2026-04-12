@@ -59,7 +59,14 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<String> handleForbidden(ForbiddenException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleForbidden(ForbiddenException ex) {
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN.getReasonPhrase(),
+                ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 }
