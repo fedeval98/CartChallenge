@@ -52,7 +52,7 @@ http://localhost:8080
 
 Todos los endpoints requieren **Basic Auth**.
 
-Usar email y password de un cliente precargado en la base de datos.
+Usar email y password de un cliente precargado en la base de datos.[(Consultar Wiki)](https://github.com/fedeval98/CartChallenge/wiki/Endpoints#autenticaci%C3%B3n)
 
 ## Base de datos H2
 
@@ -66,26 +66,11 @@ Configuración típica:
 - User: sa
 - Password: (vacío)
 
-## Endpoints principales
+---
 
-### Crear carrito
-POST /api/cart/createcart
+## Endpoints principales - [ver endpoints](https://github.com/fedeval98/CartChallenge/wiki/Endpoints)
 
-### Agregar producto
-POST /api/cart/addproduct
-
-### Eliminar producto
-DELETE /api/cart/deleteproductfrom/{cartCode}/products/{productCode}
-
-### Listar productos
-GET /api/cart/{cartCode}/products
-
-### Procesar orden
-POST /api/cart/processOrder/{cartCode}
-
-### Listar carritos
-GET /api/cart/mycarts
-
+---
 ## Tests
 
 Ejecutar:
