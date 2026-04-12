@@ -8,9 +8,5 @@ import java.math.BigDecimal;
 public class CartItemResponse {
 
     private String productCode;
-    private String productName;
-    private String category;
-    private BigDecimal unitPrice;
     private Integer quantity;
-    private BigDecimal subtotal;
 }
