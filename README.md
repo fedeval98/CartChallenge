@@ -69,13 +69,13 @@ Configuración típica:
 ## Endpoints principales
 
 ### Crear carrito
-POST /api/cart/createCart
+POST /api/cart/createcart
 
 ### Agregar producto
-POST /api/cart/addProduct
+POST /api/cart/addproduct
 
 ### Eliminar producto
-DELETE /api/cart/deleteProductFrom/{cartCode}/products/{productCode}
+DELETE /api/cart/deleteproductfrom/{cartCode}/products/{productCode}
 
 ### Listar productos
 GET /api/cart/{cartCode}/products
@@ -84,7 +84,7 @@ GET /api/cart/{cartCode}/products
 POST /api/cart/processOrder/{cartCode}
 
 ### Listar carritos
-GET /api/cart/myCarts
+GET /api/cart/mycarts
 
 ## Tests
 
