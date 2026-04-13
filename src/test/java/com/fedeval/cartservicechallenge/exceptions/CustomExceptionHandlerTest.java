@@ -12,7 +12,7 @@ class CustomExceptionHandlerTest {
     private final CustomExceptionHandler handler = new CustomExceptionHandler();
 
     @Test
-    void should_handle_resource_not_found() {
+    void shouldHandleResourceNotFound() {
         ResourceNotFoundException ex = new ResourceNotFoundException("Cart not found");
 
         ResponseEntity<ErrorResponse> response = handler.handleResourceNotFound(ex);
@@ -26,7 +26,7 @@ class CustomExceptionHandlerTest {
     }
 
     @Test
-    void should_handle_conflict() {
+    void shouldHandleConflict() {
         ConflictException ex = new ConflictException("Cart is not active");
 
         ResponseEntity<ErrorResponse> response = handler.handleConflict(ex);
@@ -39,7 +39,7 @@ class CustomExceptionHandlerTest {
     }
 
     @Test
-    void should_handle_bad_request() {
+    void shouldHandleBadRequest() {
         BadRequestException ex = new BadRequestException("Cart is empty");
 
         ResponseEntity<ErrorResponse> response = handler.handleBadRequest(ex);
@@ -52,7 +52,7 @@ class CustomExceptionHandlerTest {
     }
 
     @Test
-    void should_handle_forbidden() {
+    void shouldHandleForbidden() {
         ForbiddenException ex = new ForbiddenException("You cannot access this cart");
 
         ResponseEntity<ErrorResponse> response = handler.handleForbidden(ex);
@@ -67,7 +67,7 @@ class CustomExceptionHandlerTest {
     }
 
     @Test
-    void should_handle_generic_exception() {
+    void shouldHandleGenericException() {
         Exception ex = new RuntimeException("boom");
 
         ResponseEntity<ErrorResponse> response = handler.handleGenericException(ex);

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CartMapperTest {
     @Test
-    void should_map_cart_to_response() {
+    void shouldMapCartToResponse() {
         Client client = new Client();
         client.setId(1L);
 
@@ -42,7 +42,7 @@ public class CartMapperTest {
     }
 
     @Test
-    void should_map_cart_item_with_category_and_discount() {
+    void shouldMapCartItemWithCategoryAndDiscount() {
         Category category = new Category();
         category.setName("Electronics");
         category.setDiscountRate(BigDecimal.valueOf(10)); // 10%

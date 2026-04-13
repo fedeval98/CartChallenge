@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CodeGeneratorTest {
     @Test
-    void should_generate_valid_product_code() {
+    void shouldGenerateValidProductCode() {
         String code = CodeGenerator.generateProductCode();
 
         assertNotNull(code);
@@ -18,7 +18,7 @@ public class CodeGeneratorTest {
     }
 
     @Test
-    void should_generate_valid_cart_code() {
+    void shouldGenerateValidCartCode() {
         String code = CodeGenerator.generateCartCode();
 
         assertNotNull(code);

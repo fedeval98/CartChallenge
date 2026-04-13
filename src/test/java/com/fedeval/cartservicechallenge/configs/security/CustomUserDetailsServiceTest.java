@@ -26,7 +26,7 @@ class CustomUserDetailsServiceTest {
     private CustomUserDetailsService customUserDetailsService;
 
     @Test
-    void should_load_user_by_username() {
+    void shouldLoadUserByUsername() {
         Client client = new Client();
         client.setEmail("test@mail.com");
         client.setPassword("1234");
@@ -45,7 +45,7 @@ class CustomUserDetailsServiceTest {
     }
 
     @Test
-    void should_throw_exception_when_user_not_found() {
+    void shouldThrowExceptionWhenUserNotFound() {
         when(clientRepository.findByEmail("unknown@mail.com"))
                 .thenReturn(Optional.empty());
 
