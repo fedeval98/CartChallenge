@@ -34,7 +34,7 @@ class CartControllerTest {
 
         assertNotNull(response);
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
-        assertEquals("Estamos procesando su orden", response.getBody());
+        assertEquals("We're processing your order. You can keep shopping while we finish it.", response.getBody());
 
         verify(authentication).getName();
         verify(cartService).processCartOrder("CART-123", EMAIL);

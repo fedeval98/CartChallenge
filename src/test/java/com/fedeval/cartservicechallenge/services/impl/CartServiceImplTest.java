@@ -480,6 +480,37 @@ class CartServiceImplTest {
 
     @Test
     void shouldTriggerAsyncOrderProcessing() {
+        Client client = Client.builder()
+                .email(EMAIL)
+                .build();
+
+        Category category = Category.builder()
+                .name("General")
+                .discountRate(BigDecimal.ZERO)
+                .build();
+
+        Product product = Product.builder()
+                .code("PROD-1")
+                .name("Producto")
+                .stock(10)
+                .price(new BigDecimal("1000"))
+                .category(category)
+                .build();
+
+        CartItem item = CartItem.builder()
+                .product(product)
+                .quantity(1)
+                .build();
+
+        Cart cart = Cart.builder()
+                .code("CART-123")
+                .client(client)
+                .items(List.of(item))
+                .status(CartStatus.ACTIVE)
+                .build();
+
+        when(cartRepository.findByCode("CART-123")).thenReturn(Optional.of(cart));
+
         cartService.processCartOrder("CART-123", EMAIL);
 
         verify(orderAsyncService).processOrderAsync("CART-123", EMAIL);

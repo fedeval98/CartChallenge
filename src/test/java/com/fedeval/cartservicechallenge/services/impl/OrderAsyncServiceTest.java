@@ -141,7 +141,7 @@ class OrderAsyncServiceTest {
     }
 
     @Test
-    void shouldRestoreCartToActiveWhenStockIsInsufficient() {
+    void shouldThrowConflictWhenStockIsInsufficientBeforeProcessingStarts() {
         Cart cart = buildCart();
 
         Category category = new Category();
@@ -161,15 +161,18 @@ class OrderAsyncServiceTest {
         cart.getItems().add(item);
 
         when(cartRepository.findByCode("CART-123")).thenReturn(Optional.of(cart));
-        when(orderRepository.save(any(CustomerOrder.class))).thenAnswer(inv -> inv.getArgument(0));
-        when(cartRepository.save(any(Cart.class))).thenAnswer(inv -> inv.getArgument(0));
 
         ConflictException ex = assertThrows(
                 ConflictException.class,
                 () -> orderAsyncService.processOrderAsync("CART-123", EMAIL)
         );
 
-        assertTrue(ex.getMessage().contains("Insufficient stock for product"));
+        assertEquals("Insufficient stock for product PROD-001", ex.getMessage());
         assertEquals(CartStatus.ACTIVE, cart.getStatus());
+
+        verify(cartRepository, never()).save(cart);
+        verify(orderRepository, never()).save(any(CustomerOrder.class));
+        verify(orderItemRepository, never()).save(any(CustomerOrderItem.class));
+        verify(productRepository, never()).save(any(Product.class));
     }
 }

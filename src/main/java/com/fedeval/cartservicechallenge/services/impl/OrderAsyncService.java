@@ -47,6 +47,14 @@ public class OrderAsyncService {
             throw new BadRequestException("Cart is empty");
         }
 
+        for (CartItem cartItem : cart.getItems()) {
+            Product product = cartItem.getProduct();
+
+            if (cartItem.getQuantity() > product.getStock()) {
+                throw new ConflictException("Insufficient stock for product " + product.getCode());
+            }
+        }
+
         cart.setStatus(CartStatus.PROCESSING);
         cartRepository.save(cart);
 
