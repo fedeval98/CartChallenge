@@ -72,9 +72,14 @@ Configuración típica:
 
 ---
 
-## Endpoints principales - [consultar wiki](https://github.com/fedeval98/CartChallenge/wiki/Endpoints)
+## Endpoints principales - [Consultar wiki](https://github.com/fedeval98/CartChallenge/wiki/Endpoints)
 
 ---
+
+## Informe de Observabilidad y pruebas de Estres - [Consultar wiki](https://github.com/fedeval98/CartChallenge/wiki/Observabilidad-y-pruebas-de-estr%C3%A9s)
+
+---
+
 ## Tests
 
 Ejecutar:
