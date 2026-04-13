@@ -1,7 +1,6 @@
 package com.fedeval.cartservicechallenge.services;
 
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartDetailResponse;
-import com.fedeval.cartservicechallenge.dtos.cart.response.CartProductResponse;
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartResponse;
 
 import java.util.List;

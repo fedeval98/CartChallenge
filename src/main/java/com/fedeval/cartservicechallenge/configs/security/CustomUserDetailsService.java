@@ -2,7 +2,6 @@ package com.fedeval.cartservicechallenge.configs.security;
 
 import com.fedeval.cartservicechallenge.models.Client;
 import com.fedeval.cartservicechallenge.repositories.ClientRepository;
-import lombok.NonNull;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,6 +1,5 @@
 package com.fedeval.cartservicechallenge.services.impl;
 
-import com.fedeval.cartservicechallenge.controllers.CartController;
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartDetailResponse;
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartProductResponse;
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartResponse;
@@ -19,9 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

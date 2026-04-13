@@ -59,7 +59,7 @@ class OrderAsyncServiceTest {
     }
 
     @Test
-    void should_throw_forbidden_when_cart_does_not_belong_to_user() {
+    void shouldThrowForbiddenWhenCartDoesNotBelongToUser() {
         Cart cart = buildCart();
 
         when(cartRepository.findByCode("CART-123")).thenReturn(Optional.of(cart));
@@ -73,7 +73,7 @@ class OrderAsyncServiceTest {
     }
 
     @Test
-    void should_throw_conflict_when_cart_is_not_active() {
+    void shouldThrowConflictWhenCartIsNotActive() {
         Cart cart = buildCart();
         cart.setStatus(CartStatus.COMPLETED);
 
@@ -88,7 +88,7 @@ class OrderAsyncServiceTest {
     }
 
     @Test
-    void should_throw_bad_request_when_cart_is_empty() {
+    void shouldThrowBadRequestWhenCartIsEmpty() {
         Cart cart = buildCart();
 
         when(cartRepository.findByCode("CART-123")).thenReturn(Optional.of(cart));
@@ -102,7 +102,7 @@ class OrderAsyncServiceTest {
     }
 
     @Test
-    void should_process_order_successfully() {
+    void shouldProcessOrderSuccessfully() {
         Cart cart = buildCart();
 
         Category category = new Category();
@@ -141,7 +141,7 @@ class OrderAsyncServiceTest {
     }
 
     @Test
-    void should_restore_cart_to_active_when_stock_is_insufficient() {
+    void shouldRestoreCartToActiveWhenStockIsInsufficient() {
         Cart cart = buildCart();
 
         Category category = new Category();

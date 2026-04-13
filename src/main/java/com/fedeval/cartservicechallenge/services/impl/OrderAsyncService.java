@@ -74,19 +74,6 @@ public class OrderAsyncService {
             for (CartItem cartItem : cart.getItems()) {
                 Product product = cartItem.getProduct();
 
-                if (cartItem.getQuantity() > product.getStock()) {
-                    log.warn(
-                            "Insufficient stock for product {} in cart {}. Requested: {}, Available: {}",
-                            product.getCode(),
-                            cartCode,
-                            cartItem.getQuantity(),
-                            product.getStock()
-                    );
-                    throw new ConflictException(
-                            "Insufficient stock for product: " + product.getCode()
-                    );
-                }
-
                 BigDecimal discountRate = BigDecimal.ZERO;
                 if (product.getCategory() != null && product.getCategory().getDiscountRate() != null) {
                     discountRate = product.getCategory().getDiscountRate();
