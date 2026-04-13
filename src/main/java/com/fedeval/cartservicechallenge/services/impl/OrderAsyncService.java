@@ -62,11 +62,12 @@ public class OrderAsyncService {
         try {
             BigDecimal total = BigDecimal.ZERO;
 
-            CustomerOrder order = new CustomerOrder();
-            order.setClient(cart.getClient());
-            order.setDate(LocalDateTime.now());
-            order.setOrderStatus(OrderStatus.PENDING);
-            order.setTotal(BigDecimal.ZERO);
+            CustomerOrder order = CustomerOrder.builder()
+                    .client(cart.getClient())
+                    .date(LocalDateTime.now())
+                    .orderStatus(OrderStatus.PENDING)
+                    .total(BigDecimal.ZERO)
+                    .build();
 
             CustomerOrder savedOrder = orderRepository.save(order);
             log.info("Order created in PENDING status for cart {}", cartCode);
@@ -84,12 +85,13 @@ public class OrderAsyncService {
                         .subtract(unitPrice.multiply(discountRate).divide(BigDecimal.valueOf(100)))
                         .multiply(BigDecimal.valueOf(cartItem.getQuantity()));
 
-                CustomerOrderItem orderItem = new CustomerOrderItem();
-                orderItem.setCustomerOrder(savedOrder);
-                orderItem.setProduct(product);
-                orderItem.setQuantity(cartItem.getQuantity());
-                orderItem.setUnitPrice(unitPrice);
-                orderItem.setSubtotal(subtotal);
+                CustomerOrderItem orderItem = CustomerOrderItem.builder()
+                        .customerOrder(savedOrder)
+                        .product(product)
+                        .quantity(cartItem.getQuantity())
+                        .unitPrice(unitPrice)
+                        .subtotal(subtotal)
+                        .build();
 
                 orderItemRepository.save(orderItem);
 

@@ -67,10 +67,11 @@ public class CartServiceImpl implements CartService {
             throw new ConflictException("Client already has an active cart");
         }
 
-        Cart cart = new Cart();
-        cart.setClient(authenticatedClient);
-        cart.setStatus(CartStatus.ACTIVE);
-        cart.setCode(CodeGenerator.generateCartCode());
+        Cart cart = Cart.builder()
+                .client(authenticatedClient)
+                .status(CartStatus.ACTIVE)
+                .code(CodeGenerator.generateCartCode())
+                .build();
 
         return CartMapper.toResponse(cartRepository.save(cart));
     }
@@ -109,10 +110,11 @@ public class CartServiceImpl implements CartService {
             cartItem.setQuantity(totalRequested);
             cartItemRepository.save(cartItem);
         } else {
-            CartItem newItem = new CartItem();
-            newItem.setCart(cart);
-            newItem.setProduct(product);
-            newItem.setQuantity(quantity);
+            CartItem newItem = CartItem.builder()
+                    .cart(cart)
+                    .product(product)
+                    .quantity(quantity)
+                    .build();
             cartItemRepository.save(newItem);
         }
 
