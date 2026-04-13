@@ -92,7 +92,7 @@ public class CartController {
     ) {
         String email = authentication.getName();
         cartService.processCartOrder(cartCode, email);
-        return ResponseEntity.accepted().body("Estamos procesando su orden");
+        return ResponseEntity.accepted().body("We're processing your order. You can keep shopping while we finish it.");
     }
 
     @GetMapping("/mycarts")
