@@ -170,6 +170,18 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void processCartOrder(String cartCode, String email) {
+
+        Cart cart = cartRepository.findByCode(cartCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+
+        if (!cart.getClient().getEmail().equals(email)) {
+            throw new ForbiddenException("You cannot access this cart");
+        }
+
+        if (cart.getItems() == null || cart.getItems().isEmpty()) {
+            throw new BadRequestException("Cart is empty");
+        }
+
         orderAsyncService.processOrderAsync(cartCode, email);
     }
 

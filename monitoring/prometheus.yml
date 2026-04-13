@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'cartchallenge'
+    metrics_path: '/actuator/prometheus'
+    basic_auth:
+      username: admin@mail.com
+      password: 1234
+    static_configs:
+      - targets: ['localhost:8080']

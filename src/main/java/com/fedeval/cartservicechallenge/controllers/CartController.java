@@ -85,7 +85,7 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/processOrder/{cartCode}")
+    @PostMapping("/processorder/{cartCode}")
     public ResponseEntity<String> processOrder(
             @PathVariable @NotBlank String cartCode,
             Authentication authentication
