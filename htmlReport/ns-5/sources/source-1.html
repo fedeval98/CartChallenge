@@ -1,0 +1,176 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CartMapper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.fedeval.cartservicechallenge.mappers</a>
+</div>
+
+<h1>Coverage Summary for Class: CartMapper (com.fedeval.cartservicechallenge.mappers)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CartMapper</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (1/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    93.5%
+  </span>
+  <span class="absValue">
+    (29/31)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.fedeval.cartservicechallenge.mappers;
+&nbsp;
+&nbsp;import com.fedeval.cartservicechallenge.dtos.cart.response.CartItemResponse;
+&nbsp;import com.fedeval.cartservicechallenge.dtos.cart.response.CartProductResponse;
+&nbsp;import com.fedeval.cartservicechallenge.dtos.cart.response.CartResponse;
+&nbsp;import com.fedeval.cartservicechallenge.models.Cart;
+&nbsp;import com.fedeval.cartservicechallenge.models.CartItem;
+&nbsp;import com.fedeval.cartservicechallenge.models.Product;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.util.stream.Collectors;
+&nbsp;
+<b class="nc">&nbsp;public class CartMapper {</b>
+&nbsp;    public static CartResponse toResponse(Cart cart) {
+<b class="fc">&nbsp;        CartResponse response = new CartResponse();</b>
+<b class="fc">&nbsp;        response.setCode(cart.getCode());</b>
+<b class="fc">&nbsp;        response.setClientId(cart.getClient().getId());</b>
+<b class="fc">&nbsp;        response.setStatus(cart.getStatus().name());</b>
+&nbsp;
+<b class="fc">&nbsp;        response.setItems(</b>
+<b class="fc">&nbsp;                cart.getItems().stream()</b>
+<b class="fc">&nbsp;                        .map(item -&gt; {</b>
+<b class="fc">&nbsp;                            CartItemResponse itemResponse = new CartItemResponse();</b>
+<b class="fc">&nbsp;                            itemResponse.setProductCode(item.getProduct().getCode());</b>
+<b class="fc">&nbsp;                            itemResponse.setQuantity(item.getQuantity());</b>
+<b class="fc">&nbsp;                            return itemResponse;</b>
+&nbsp;                        })
+<b class="fc">&nbsp;                        .collect(Collectors.toList())</b>
+&nbsp;        );
+&nbsp;
+<b class="fc">&nbsp;        return response;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static CartProductResponse toCartProductResponse(CartItem cartItem) {
+<b class="fc">&nbsp;        Product product = cartItem.getProduct();</b>
+&nbsp;
+<b class="fc">&nbsp;        CartProductResponse response = new CartProductResponse();</b>
+<b class="fc">&nbsp;        response.setProductId(product.getId());</b>
+<b class="fc">&nbsp;        response.setProductCode(product.getCode());</b>
+<b class="fc">&nbsp;        response.setProductName(product.getName());</b>
+<b class="fc">&nbsp;        response.setPrice(product.getPrice());</b>
+<b class="fc">&nbsp;        response.setStock(product.getStock());</b>
+<b class="fc">&nbsp;        response.setQuantity(cartItem.getQuantity());</b>
+&nbsp;
+<b class="pc">&nbsp;        if (product.getCategory() != null) {</b>
+<b class="fc">&nbsp;            response.setCategoryName(product.getCategory().getName());</b>
+<b class="fc">&nbsp;            response.setDiscountRate(product.getCategory().getDiscountRate());</b>
+&nbsp;
+<b class="fc">&nbsp;            BigDecimal discount = product.getCategory().getDiscountRate();</b>
+<b class="fc">&nbsp;            BigDecimal finalPrice = product.getPrice()</b>
+<b class="fc">&nbsp;                    .subtract(product.getPrice().multiply(discount).divide(BigDecimal.valueOf(100)));</b>
+&nbsp;
+<b class="fc">&nbsp;            response.setFinalPrice(finalPrice);</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            response.setFinalPrice(product.getPrice());</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return response;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-04-14 17:47</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,97 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > CartService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.fedeval.cartservicechallenge.services</a>
+</div>
+
+<h1>Coverage Summary for Class: CartService (com.fedeval.cartservicechallenge.services)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">CartService$MockitoMock$hrJnohFN</td>
+  </tr>
+  <tr>
+    <td class="name">CartService$MockitoMock$hrJnohFN$auxiliary$7YJv20Ml</td>
+  </tr>
+  <tr>
+    <td class="name">CartService$MockitoMock$hrJnohFN$auxiliary$L2QlqUKt</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.fedeval.cartservicechallenge.services;
+&nbsp;
+&nbsp;import com.fedeval.cartservicechallenge.dtos.cart.response.CartDetailResponse;
+&nbsp;import com.fedeval.cartservicechallenge.dtos.cart.response.CartResponse;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;public interface CartService {
+&nbsp;    CartResponse createCart(Long clientid, String email);
+&nbsp;
+&nbsp;    CartResponse addProductToCart(String cartCode, String productCode, Integer quantity, String email);
+&nbsp;
+&nbsp;    CartResponse removeProductFromCart(String cartCode, String productCode, String email);
+&nbsp;
+&nbsp;    CartDetailResponse getCartProducts(String cartCode, String email);
+&nbsp;
+&nbsp;    void processCartOrder(String cartCode, String email);
+&nbsp;
+&nbsp;    List&lt;CartResponse&gt; getCartsByClient(String email);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-04-14 17:47</div>
+</div>
+</body>
+</html>
