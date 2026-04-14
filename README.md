@@ -86,7 +86,7 @@ Ejecutar:
 
 gradlew test
 
-[Consultar Coverage de Tests](https://fedeval98.github.io/CartChallengeReportTest/)
+[Consultar Coverage de Tests](https://github.com/fedeval98/CartChallenge/wiki/Tets-Coverage)
 
 
 ## Notas
