@@ -86,6 +86,9 @@ Ejecutar:
 
 gradlew test
 
+[Consultar Coverage de Tests](https://fedeval98.github.io/CartChallengeReportTest/)
+
+
 ## Notas
 
 - Autenticación con Basic Auth
