@@ -161,11 +161,12 @@ public class CartServiceImpl implements CartService {
                 .map(CartMapper::toCartProductResponse)
                 .toList();
 
-        CartDetailResponse response = new CartDetailResponse();
-        response.setClientId(cart.getClient().getId());
-        response.setCartCode(cart.getCode());
-        response.setStatus(cart.getStatus().name());
-        response.setProducts(products);
+        CartDetailResponse response = CartDetailResponse.builder()
+                .clientId(cart.getClient().getId())
+                .cartCode(cart.getCode())
+                .status(cart.getStatus().name())
+                .products(products)
+                .build();
 
         return response;
     }

@@ -1,10 +1,12 @@
 package com.fedeval.cartservicechallenge.dtos.cart.response;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Value;
 
-@Data
+@Value
+@Builder
 public class CartItemResponse {
 
-    private String productCode;
-    private Integer quantity;
+    String productCode;
+    Integer quantity;
 }
