@@ -2,6 +2,8 @@ package com.fedeval.cartservicechallenge.models;
 
 import com.fedeval.cartservicechallenge.models.enums.RoleType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -21,10 +23,21 @@ public class Client {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column (nullable = false)
-    private String firstName, lastName, password;
+    @NotBlank(message = "First name cannot be empty")
+    @Column(nullable = false)
+    private String firstName;
 
-    @Column (nullable = false, unique = true)
+    @NotBlank(message = "Last name cannot be empty")
+    @Column(nullable = false)
+    private String lastName;
+
+    @NotBlank(message = "Password cannot be empty")
+    @Column(nullable = false)
+    private String password;
+
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Email format is invalid")
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -39,5 +52,16 @@ public class Client {
     @OneToMany(mappedBy = "client")
     @Builder.Default
     private List<CustomerOrder> customerOrders = new ArrayList<>();
+
+    public void addCart(Cart cart) {
+        cart.setClient(this);
+        this.carts.add(cart);
+    }
+
+    public void addOrder(CustomerOrder order) {
+        order.setClient(this);
+        this.customerOrders.add(order);
+    }
+
 
 }

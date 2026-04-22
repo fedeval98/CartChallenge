@@ -38,4 +38,14 @@ public class CustomerOrder {
     @Column(nullable = false)
     private BigDecimal total;
 
+    public void addItem(CustomerOrderItem item) {
+        item.setCustomerOrder(this);
+        this.items.add(item);
+    }
+
+    public void removeItem(CustomerOrderItem item) {
+        item.setCustomerOrder(null);
+        this.items.remove(item);
+    }
+
 }

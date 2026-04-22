@@ -91,6 +91,7 @@ public class OrderAsyncService {
                         .subtotal(subtotal)
                         .build();
 
+                savedOrder.addItem(orderItem);
                 orderItemRepository.save(orderItem);
 
                 product.setStock(product.getStock() - cartItem.getQuantity());

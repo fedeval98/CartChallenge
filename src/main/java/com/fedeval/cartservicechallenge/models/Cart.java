@@ -32,4 +32,14 @@ public class Cart {
 
     @Column(nullable = false, unique = true)
     private String code;
+
+    public void addItem(CartItem item) {
+        item.setCart(this);
+        this.items.add(item);
+    }
+
+    public void removeItem(CartItem item) {
+        item.setCart(null);
+        this.items.remove(item);
+    }
 }

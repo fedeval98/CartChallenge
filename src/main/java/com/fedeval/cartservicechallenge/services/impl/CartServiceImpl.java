@@ -73,6 +73,8 @@ public class CartServiceImpl implements CartService {
                 .code(CodeGenerator.generateCartCode())
                 .build();
 
+        authenticatedClient.addCart(cart);
+
         return CartMapper.toResponse(cartRepository.save(cart));
     }
 
@@ -111,10 +113,11 @@ public class CartServiceImpl implements CartService {
             cartItemRepository.save(cartItem);
         } else {
             CartItem newItem = CartItem.builder()
-                    .cart(cart)
                     .product(product)
                     .quantity(quantity)
                     .build();
+
+            cart.addItem(newItem);
             cartItemRepository.save(newItem);
         }
 
@@ -141,7 +144,7 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem = cartItemRepository.findByCartAndProduct(cart, product)
                 .orElseThrow(() -> new ResourceNotFoundException("Product is not in cart"));
 
-        cart.getItems().remove(cartItem);
+        cart.removeItem(cartItem);
         cartItemRepository.delete(cartItem);
 
         return CartMapper.toResponse(cart);
@@ -192,7 +195,13 @@ public class CartServiceImpl implements CartService {
         Client client = clientRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
 
-        return cartRepository.findAllByClientId(client.getId()).stream()
+        List<Cart> carts = cartRepository.findAllByClientId(client.getId());
+
+        if (carts.isEmpty()) {
+            throw new ResourceNotFoundException("There are no carts associated with this client yet");
+        }
+
+        return carts.stream()
                 .map(CartMapper::toResponse)
                 .toList();
     }

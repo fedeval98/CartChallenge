@@ -16,9 +16,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/h2-console/**").hasRole("ADMIN")
-                        .requestMatchers("/actuator/**").hasRole("ADMIN")
-                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/api/client/register").permitAll()
+                        .requestMatchers("/h2-console/**","/actuator/**").hasRole("ADMIN")
+                        .requestMatchers("/api/cart/**").hasAnyRole("CLIENT", "ADMIN")
+                        .requestMatchers("/api/product/**").hasRole("ADMIN")
                         .anyRequest().denyAll()
                 )
                 .httpBasic(Customizer.withDefaults());
