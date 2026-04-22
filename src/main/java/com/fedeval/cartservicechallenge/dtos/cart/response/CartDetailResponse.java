@@ -1,14 +1,16 @@
 package com.fedeval.cartservicechallenge.dtos.cart.response;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Value;
 
 import java.util.List;
 
-@Data
+@Value
+@Builder
 public class CartDetailResponse {
 
-    private Long clientId;
-    private String cartCode;
-    private String status;
-    private List<CartProductResponse> products;
+    Long clientId;
+    String cartCode;
+    String status;
+    List<CartProductResponse> products;
 }

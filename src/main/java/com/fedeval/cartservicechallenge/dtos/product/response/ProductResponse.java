@@ -1,17 +1,17 @@
 package com.fedeval.cartservicechallenge.dtos.product.response;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
 import java.math.BigDecimal;
 
-@Data
+@Value
 @Builder
 public class ProductResponse {
-    private Long id;
-    private String code;
-    private String name;
-    private String categoryName;
-    private Integer stock;
-    private BigDecimal price;
+    Long id;
+    String code;
+    String name;
+    String categoryName;
+    Integer stock;
+    BigDecimal price;
 }

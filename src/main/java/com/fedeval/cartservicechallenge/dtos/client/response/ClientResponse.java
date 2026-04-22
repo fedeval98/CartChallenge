@@ -1,12 +1,14 @@
 package com.fedeval.cartservicechallenge.dtos.client.response;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Value;
 
-@Data
+@Value
+@Builder
 public class ClientResponse {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String role;
+    Long id;
+    String firstName;
+    String lastName;
+    String email;
+    String role;
 }

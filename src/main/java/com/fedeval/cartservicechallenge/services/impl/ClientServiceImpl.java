@@ -42,13 +42,12 @@ public class ClientServiceImpl implements ClientService {
 
         Client savedClient = clientRepository.save(client);
 
-        ClientResponse response = new ClientResponse();
-        response.setId(savedClient.getId());
-        response.setFirstName(savedClient.getFirstName());
-        response.setLastName(savedClient.getLastName());
-        response.setEmail(savedClient.getEmail());
-        response.setRole(savedClient.getRole().name());
-
-        return response;
+        return ClientResponse.builder()
+                .id(savedClient.getId())
+                .firstName(savedClient.getFirstName())
+                .lastName(savedClient.getLastName())
+                .email(savedClient.getEmail())
+                .role(savedClient.getRole().name())
+                .build();
     }
 }

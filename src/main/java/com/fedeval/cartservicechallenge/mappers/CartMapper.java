@@ -8,53 +8,51 @@ import com.fedeval.cartservicechallenge.models.CartItem;
 import com.fedeval.cartservicechallenge.models.Product;
 
 import java.math.BigDecimal;
-import java.util.stream.Collectors;
 
 public class CartMapper {
     public static CartResponse toResponse(Cart cart) {
-        CartResponse response = new CartResponse();
-        response.setCode(cart.getCode());
-        response.setClientId(cart.getClient().getId());
-        response.setStatus(cart.getStatus().name());
-
-        response.setItems(
-                cart.getItems().stream()
-                        .map(item -> {
-                            CartItemResponse itemResponse = new CartItemResponse();
-                            itemResponse.setProductCode(item.getProduct().getCode());
-                            itemResponse.setQuantity(item.getQuantity());
-                            return itemResponse;
-                        })
-                        .collect(Collectors.toList())
-        );
-
-        return response;
+        return CartResponse.builder()
+                .code(cart.getCode())
+                .clientId(cart.getClient().getId())
+                .status(cart.getStatus().name())
+                .items(cart.getItems().stream()
+                        .map(item -> CartItemResponse.builder()
+                                .productCode(item.getProduct().getCode())
+                                .quantity(item.getQuantity())
+                                .build()
+                        )
+                        .toList()
+                )
+                .build();
     }
 
     public static CartProductResponse toCartProductResponse(CartItem cartItem) {
         Product product = cartItem.getProduct();
 
-        CartProductResponse response = new CartProductResponse();
-        response.setProductId(product.getId());
-        response.setProductCode(product.getCode());
-        response.setProductName(product.getName());
-        response.setPrice(product.getPrice());
-        response.setStock(product.getStock());
-        response.setQuantity(cartItem.getQuantity());
+        String categoryName = null;
+        BigDecimal discountRate = BigDecimal.ZERO;
+        BigDecimal finalPrice = product.getPrice();
 
         if (product.getCategory() != null) {
-            response.setCategoryName(product.getCategory().getName());
-            response.setDiscountRate(product.getCategory().getDiscountRate());
+            categoryName = product.getCategory().getName();
 
-            BigDecimal discount = product.getCategory().getDiscountRate();
-            BigDecimal finalPrice = product.getPrice()
-                    .subtract(product.getPrice().multiply(discount).divide(BigDecimal.valueOf(100)));
+            if (product.getCategory().getDiscountRate() != null) {
+                discountRate = product.getCategory().getDiscountRate();
+            }
 
-            response.setFinalPrice(finalPrice);
-        } else {
-            response.setFinalPrice(product.getPrice());
+            finalPrice = product.getPrice()
+                    .subtract(product.getPrice().multiply(discountRate).divide(BigDecimal.valueOf(100)));
         }
-
-        return response;
+        return CartProductResponse.builder()
+                .productId(product.getId())
+                .productCode(product.getCode())
+                .productName(product.getName())
+                .price(product.getPrice())
+                .stock(product.getStock())
+                .quantity(cartItem.getQuantity())
+                .categoryName(categoryName)
+                .discountRate(discountRate)
+                .finalPrice(finalPrice)
+                .build();
     }
 }
