@@ -39,16 +39,15 @@ public class CartController {
     }
 
     @PostMapping("/addproduct")
-    public ResponseEntity<CartResponse> addProductToCart(
+    public ResponseEntity<CartResponse> addProductsToCart(
             @RequestBody @Valid AddProductToCartRequest request,
             Authentication authentication
     ) {
         String email = authentication.getName();
 
-        CartResponse response = cartService.addProductToCart(
+        CartResponse response = cartService.addProductsToCart(
                 request.getCartCode(),
-                request.getProductCode(),
-                request.getQuantity(),
+                request.getProducts(),
                 email
         );
 

@@ -1,5 +1,6 @@
 package com.fedeval.cartservicechallenge.services.impl;
 
+import com.fedeval.cartservicechallenge.dtos.cart.request.CartProductItemRequest;
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartDetailResponse;
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartProductResponse;
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartResponse;
@@ -79,11 +80,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartResponse addProductToCart(String cartCode, String productCode, Integer quantity, String email) {
-
-        if (quantity == null || quantity <= 0) {
-            throw new BadRequestException("Quantity must be greater than 0");
-        }
+    public CartResponse addProductsToCart(String cartCode, List<CartProductItemRequest> products, String email) {
 
         Cart cart = cartRepository.findByCode(cartCode)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
@@ -96,32 +93,42 @@ public class CartServiceImpl implements CartService {
             throw new ConflictException("Cart is not active");
         }
 
-        Product product = productRepository.findByCode(productCode)
-                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        for (CartProductItemRequest requestItem : products) {
 
-        CartItem cartItem = cartItemRepository.findByCartAndProduct(cart, product).orElse(null);
+            if (requestItem.getQuantity() == null || requestItem.getQuantity() <= 0) {
+                throw new BadRequestException("Quantity must be greater than 0");
+            }
 
-        int currentQuantity = (cartItem != null) ? cartItem.getQuantity() : 0;
-        int totalRequested = currentQuantity + quantity;
+            Product product = productRepository.findByCode(requestItem.getProductCode())
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Product not found: " + requestItem.getProductCode()
+                    ));
 
-        if (totalRequested > product.getStock()) {
-            throw new ConflictException("Requested quantity exceeds available stock");
+            CartItem cartItem = cartItemRepository.findByCartAndProduct(cart, product).orElse(null);
+
+            int currentQuantity = (cartItem != null) ? cartItem.getQuantity() : 0;
+            int totalRequested = currentQuantity + requestItem.getQuantity();
+
+            if (totalRequested > product.getStock()) {
+                throw new ConflictException("Requested quantity exceeds available stock for product " + product.getCode());
+            }
+
+            if (cartItem != null) {
+                cartItem.setQuantity(totalRequested);
+                cartItemRepository.save(cartItem);
+            } else {
+                CartItem newItem = CartItem.builder()
+                        .cart(cart)
+                        .product(product)
+                        .quantity(requestItem.getQuantity())
+                        .build();
+
+                cartItemRepository.save(newItem);
+            }
         }
 
-        if (cartItem != null) {
-            cartItem.setQuantity(totalRequested);
-            cartItemRepository.save(cartItem);
-        } else {
-            CartItem newItem = CartItem.builder()
-                    .product(product)
-                    .quantity(quantity)
-                    .build();
-
-            cart.addItem(newItem);
-            cartItemRepository.save(newItem);
-        }
-
-        return CartMapper.toResponse(cart);
+        return CartMapper.toResponse(cartRepository.findByCode(cartCode)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart not found")));
     }
 
     @Override

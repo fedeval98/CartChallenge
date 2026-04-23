@@ -1,5 +1,6 @@
 package com.fedeval.cartservicechallenge.services;
 
+import com.fedeval.cartservicechallenge.dtos.cart.request.CartProductItemRequest;
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartDetailResponse;
 import com.fedeval.cartservicechallenge.dtos.cart.response.CartResponse;
 
@@ -8,7 +9,7 @@ import java.util.List;
 public interface CartService {
     CartResponse createCart(Long clientid, String email);
 
-    CartResponse addProductToCart(String cartCode, String productCode, Integer quantity, String email);
+    CartResponse addProductsToCart(String cartCode, List<CartProductItemRequest> products, String email);
 
     CartResponse removeProductFromCart(String cartCode, String productCode, String email);
 
